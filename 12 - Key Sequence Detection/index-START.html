@@ -7,6 +7,22 @@
 </head>
 <body>
 <script>
+const sequence = [];
+const secretCode = ["ArrowUp","ArrowDown","ArrowLeft","ArrowLeft","ArrowRight","Control"];
+
+addEventListener("keyup", checkKonami);
+console.log(secretCode.length);
+
+function checkKonami(e){
+  sequence.push(e.key);
+  sequence.splice(-secretCode.length -1, sequence.length - secretCode.length);
+  console.log(sequence);
+  if(sequence.join("").toUpperCase() == secretCode.join("").toUpperCase()){
+    document.body.style.backgroundColor = "#BADA55";
+  }
+}
+
+
 </script>
 </body>
 </html>
