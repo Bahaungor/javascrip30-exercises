@@ -26,42 +26,45 @@
   </div>
 
 <script>
-const form = document.querySelector(".add-items");
-const theList = document.querySelector(".plates");
-const checkBoxes = theList.querySelectorAll(`input[type="checkbox"]`);
-const items = JSON.parse(localStorage.getItem("localItems")) || [];
-
-form.addEventListener("submit", addToItems);
-theList.addEventListener("click", toggleCheck);
-
-updateList(items, theList)
-
-
-function toggleCheck(e){
-  if(!e.target.matches("input")) return;
-  items[e.target.dataset.index].done = e.target.checked;
-  localStorage.setItem('localItems', JSON.stringify(items));
-  updateList(items, theList)
-}
-
-function addToItems(e){
-  e.preventDefault();
-  items.push({text:this.querySelector(`input[name="item"]`).value, done:false});
-  updateList(items,theList);
-  localStorage.setItem("localItems", JSON.stringify(items));
-  this.reset();
-}
-
-function updateList(objects = [], plates){
-  plates.innerHTML = objects.map((object, i) => {
-    return `
-      <li>
-        <input type="checkbox" data-index=${i} id="item${i}" ${(object.done)?"checked":""}>
-        <label for="item${i}">${object.text}</label>
-      </li>`;
-  }).join("");
+  const menuForm = document.querySelector(".add-items");
+  const itemsList = document.querySelector(".plates");
+  const items = JSON.parse(localStorage.getItem("localItems")) || [];
   
-}
+
+  function updateItems(e){
+    e.preventDefault();
+    const text = this.querySelector(`input[type="text"]`).value;
+    items.push({
+      text,
+      done:false
+    });
+    localStorage.setItem("localItems", JSON.stringify(items));
+    updateList(items, itemsList);
+    this.reset();
+  }
+
+  function updateList(object = [], list){
+    list.innerHTML = object.map((item, i) => {
+      return `
+        <li>
+          <input type="checkbox" data-index=${i} id=item${i} ${(item.done)?"checked":""}>
+          <label for="item${i}">${item.text}</label>
+        </li>
+      `;
+    }).join("");
+  }
+
+  function toggleCheck(e){
+    if(e.target.type !== "checkbox") return;
+    console.log(e.target.checked);
+    items[e.target.dataset.index].done = e.target.checked;
+    localStorage.setItem("localItems", JSON.stringify(items));
+  }
+
+  
+  menuForm.addEventListener("submit", updateItems);
+  itemsList.addEventListener("click", toggleCheck);
+  updateList(items, itemsList);
 
 </script>
 
